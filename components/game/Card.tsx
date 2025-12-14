@@ -3,6 +3,8 @@
 import React from 'react';
 import { Card as CardType } from '@/types';
 import clsx from 'clsx';
+import { useCardStyle } from '@/contexts/CardStyleContext';
+import CardBackDesign from './CardBackDesign';
 
 interface CardProps {
   card: CardType;
@@ -21,6 +23,7 @@ export default function Card({
   className = '',
   style
 }: CardProps) {
+  const { cardBackStyle } = useCardStyle();
   const suitSymbols = {
     hearts: '♥',
     diamonds: '♦',
@@ -44,19 +47,17 @@ export default function Card({
   const isClickable = onClick && !disabled;
 
   if (!card.faceUp) {
-    // Card back
+    // Card back - use the selected style
     return (
       <div
         className={clsx(
-          'rounded-lg bg-gradient-to-br from-blue-800 to-blue-600 border-2 border-blue-900 flex items-center justify-center card-shadow',
-          sizeClasses[size],
-          isClickable && 'card-hover cursor-pointer',
+          isClickable && 'cursor-pointer transform hover:scale-105 transition-transform',
           className
         )}
         onClick={isClickable ? onClick : undefined}
         style={style}
       >
-        <div className="text-white font-bold opacity-20 rotate-12">PP</div>
+        <CardBackDesign style={cardBackStyle} size={size} />
       </div>
     );
   }

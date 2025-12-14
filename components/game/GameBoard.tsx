@@ -5,6 +5,7 @@ import { useGameState } from '@/hooks/useGameState';
 import Hand from './Hand';
 import Deck from './Deck';
 import DiscardPile from './DiscardPile';
+import CardStyleSelector from './CardStyleSelector';
 import { findPlayableCards } from '@/lib/game-engine';
 import clsx from 'clsx';
 
@@ -27,150 +28,214 @@ export default function GameBoard() {
   // Show loading state while game initializes
   if (gameState.phase === 'waiting' && gameState.deck.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-white text-2xl">Starting game...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-900 via-green-800 to-green-700">
+        <div className="text-white text-2xl animate-pulse">Starting game...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-green-900 via-green-800 to-green-700">
-      {/* Game Title */}
-      <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg">Pitty Pat</h1>
+    <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-700 p-4">
+      {/* Centered Container */}
+      <div className="max-w-7xl mx-auto flex flex-col items-center">
 
-      {/* Game Status */}
-      <div className="mb-4 text-center min-h-[80px] flex flex-col justify-center">
-        {gameState.phase === 'roundEnd' && gameState.winner ? (
-          <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 rounded-lg shadow-xl animate-bounce">
-            <div className="text-3xl font-bold text-white">
-              {gameState.winner === humanPlayer?.id ? '🎉 You Win! 🎉' : '🤖 Computer Wins!'}
+        {/* Game Title - Centered */}
+        <div className="w-full text-center mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-2xl inline-block">
+            Pitty Pat
+          </h1>
+        </div>
+
+        {/* Game Status Message - Above everything */}
+        <div className="mb-4 min-h-[60px] flex items-center justify-center w-full">
+          {gameState.phase === 'roundEnd' && gameState.winner ? (
+            <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 rounded-xl shadow-2xl animate-bounce">
+              <div className="text-2xl md:text-3xl font-bold text-white">
+                {gameState.winner === humanPlayer?.id ? '🎉 You Win! 🎉' : '🤖 Computer Wins!'}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-black/30 backdrop-blur-sm px-6 py-2 rounded-full">
+              <div className="text-white text-lg font-medium">
+                {gameState.message}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Score Display - Centered above main content */}
+        <div className="flex gap-8 mb-6 justify-center">
+          <div className="bg-gradient-to-r from-emerald-700 to-emerald-600 px-6 py-3 rounded-xl shadow-lg border border-emerald-500/30">
+            <div className="text-center">
+              <div className="text-yellow-300 text-sm font-bold mb-1">YOU</div>
+              <div className="text-white text-3xl font-bold">{humanPlayer?.wins || 0}</div>
             </div>
           </div>
-        ) : (
-          <div className="text-white text-lg font-medium drop-shadow bg-black/20 px-4 py-2 rounded-lg inline-block mx-auto">
-            {gameState.message}
-          </div>
-        )}
-      </div>
-
-      {/* Score Display */}
-      <div className="flex gap-6 mb-4">
-        <div className="bg-gradient-to-r from-green-700 to-green-600 px-4 py-2 rounded-lg shadow-md border border-green-500/30">
-          <div className="text-white font-medium flex items-center gap-2">
-            <span className="text-yellow-300 font-bold">You</span>
-            <span className="text-2xl font-bold">{humanPlayer?.wins || 0}</span>
+          <div className="bg-gradient-to-r from-emerald-700 to-emerald-600 px-6 py-3 rounded-xl shadow-lg border border-emerald-500/30">
+            <div className="text-center">
+              <div className="text-blue-300 text-sm font-bold mb-1">CPU</div>
+              <div className="text-white text-3xl font-bold">{aiPlayer?.wins || 0}</div>
+            </div>
           </div>
         </div>
-        <div className="bg-gradient-to-r from-green-700 to-green-600 px-4 py-2 rounded-lg shadow-md border border-green-500/30">
-          <div className="text-white font-medium flex items-center gap-2">
-            <span className="text-blue-300 font-bold">CPU</span>
-            <span className="text-2xl font-bold">{aiPlayer?.wins || 0}</span>
-          </div>
-        </div>
-      </div>
 
-      {/* Game Board */}
-      <div className="relative bg-gradient-to-br from-green-700 to-green-600 rounded-xl p-4 md:p-8 shadow-2xl max-w-4xl w-full border border-green-800">
-        {/* AI Hand (top) */}
-        <div className="mb-8">
-          <div className={clsx(
-            "text-center mb-3 font-semibold transition-all duration-300",
-            currentPlayer?.isAI ? "text-yellow-300 text-lg" : "text-white"
-          )}>
-            Computer's Hand
-            {currentPlayer?.isAI && <span className="ml-2 animate-pulse">🤔</span>}
-          </div>
-          <div className="flex justify-center">
-            {aiPlayer && (
-              <Hand
-                cards={aiPlayer.hand}
-                isPlayerHand={false}
-                disabled
-              />
+        {/* Main Game Layout - Game board and sidebar aligned */}
+        <div className="flex flex-col lg:flex-row gap-6 w-full items-start">
+
+          {/* Left Spacer (hidden on mobile) */}
+          <div className="hidden lg:block lg:w-72"></div>
+
+          {/* Center - Game Board */}
+          <div className="flex-1 flex flex-col items-center max-w-4xl mx-auto w-full">
+
+            {/* Game Board */}
+            <div className="relative bg-gradient-to-br from-green-700 to-green-600 rounded-2xl p-6 md:p-8 shadow-2xl w-full border-2 border-green-800/50">
+
+              {/* AI Hand (top) */}
+              <div className="mb-8">
+                <div className={clsx(
+                  "text-center mb-3 font-bold transition-all duration-300",
+                  currentPlayer?.isAI ? "text-yellow-300 text-lg scale-105" : "text-white/90"
+                )}>
+                  Computer's Hand
+                  {currentPlayer?.isAI && <span className="ml-2 animate-pulse">🤔</span>}
+                </div>
+                <div className="flex justify-center">
+                  {aiPlayer && (
+                    <Hand
+                      cards={aiPlayer.hand}
+                      isPlayerHand={false}
+                      disabled
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Middle Section - Deck and Discard Pile */}
+              <div className="flex justify-center items-start gap-12 md:gap-20 mb-6">
+                <div className="flex flex-col items-center">
+                  <div className="text-white/90 text-center mb-2 text-sm font-semibold uppercase tracking-wider">
+                    Draw Pile
+                  </div>
+                  <Deck
+                    cardCount={gameState.deck.length}
+                    onClick={canDraw ? handleDrawCard : undefined}
+                    disabled={!canDraw}
+                  />
+                </div>
+
+                <div className="flex flex-col items-center">
+                  <div className="text-white/90 text-center mb-2 text-sm font-semibold uppercase tracking-wider">
+                    Discard Pile
+                  </div>
+                  <DiscardPile cards={gameState.discardPile} />
+                </div>
+              </div>
+
+              {/* Action Hints */}
+              {isPlayerTurn && (
+                <div className="mb-6 flex justify-center">
+                  <div className="bg-gradient-to-r from-yellow-500 to-orange-500 px-6 py-2.5 rounded-full shadow-xl transform hover:scale-105 transition-transform">
+                    <div className="text-white text-sm font-bold flex items-center gap-2">
+                      {canPlay && playableCards.length > 0 ? (
+                        <>
+                          <span className="text-lg animate-bounce">👇</span>
+                          <span>Play your <span className="text-yellow-100 font-black">{playableCards[0].rank}</span></span>
+                        </>
+                      ) : canDraw ? (
+                        <>
+                          <span className="text-lg animate-pulse">👆</span>
+                          <span>Draw from deck</span>
+                        </>
+                      ) : (
+                        <span className="opacity-90">Waiting...</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Player Hand (bottom) */}
+              <div>
+                <div className={clsx(
+                  "text-center mb-3 font-bold transition-all duration-300",
+                  isPlayerTurn ? "text-yellow-300 text-lg scale-105" : "text-white/90"
+                )}>
+                  Your Hand
+                  {isPlayerTurn && <span className="ml-2">👈 Your turn!</span>}
+                </div>
+                <div className="flex justify-center">
+                  {humanPlayer && (
+                    <Hand
+                      cards={humanPlayer.hand}
+                      onCardClick={isPlayerTurn ? handlePlayCard : undefined}
+                      isPlayerHand
+                      playableCardIds={playableCards.map(c => c.id)}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Restart Button */}
+            {gameState.phase === 'roundEnd' && (
+              <button
+                onClick={handleRestartRound}
+                className="mt-6 px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition-all transform hover:scale-105 shadow-lg"
+              >
+                New Round
+              </button>
             )}
           </div>
-        </div>
 
-        {/* Middle Section - Deck and Discard Pile */}
-        <div className="flex justify-center items-start gap-16 mb-6 min-h-[140px]">
-          <div className="flex flex-col items-center">
-            <div className="text-white text-center mb-3 text-sm font-medium">Draw Pile</div>
-            <Deck
-              cardCount={gameState.deck.length}
-              onClick={canDraw ? handleDrawCard : undefined}
-              disabled={!canDraw}
-            />
-          </div>
+          {/* Right Side - Card Style Selector and Instructions */}
+          <div className="w-full lg:w-72 flex flex-col gap-4 mt-6 lg:mt-0">
+            {/* Card Style Selector */}
+            <CardStyleSelector />
 
-          <div className="flex flex-col items-center">
-            <div className="text-white text-center mb-3 text-sm font-medium">Discard Pile</div>
-            <div className="relative">
-              <DiscardPile cards={gameState.discardPile} />
+            {/* Game Instructions */}
+            <div className="bg-black/30 rounded-xl p-4 backdrop-blur-sm border border-white/10">
+              <h3 className="text-white font-bold text-sm mb-3 uppercase tracking-wider">How to Play</h3>
+              <div className="text-white/80 text-xs space-y-2">
+                <div className="flex items-start gap-2">
+                  <span className="text-green-400">•</span>
+                  <span>Match the rank of the top discard card</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-yellow-400">•</span>
+                  <span>Can't match? Draw a card from the deck</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-blue-400">•</span>
+                  <span>Drawn cards that don't match are discarded</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-purple-400">•</span>
+                  <span>First to empty their hand wins!</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Action Hints - Between deck and player hand */}
-        {isPlayerTurn && (
-          <div className="mb-6 flex justify-center">
-            <div className="bg-gradient-to-r from-yellow-500 to-orange-500 px-5 py-2 rounded-full shadow-lg">
-              <div className="text-white text-sm font-semibold flex items-center gap-2">
-                {canPlay && playableCards.length > 0 ? (
-                  <>
-                    <span className="animate-bounce">👇</span>
-                    <span>Play your <span className="text-yellow-100 font-bold">{playableCards[0].rank}</span></span>
-                  </>
-                ) : canDraw ? (
-                  <>
-                    <span className="animate-pulse">👆</span>
-                    <span>Draw from deck</span>
-                  </>
-                ) : (
-                  <span className="opacity-75">Waiting...</span>
-                )}
+            {/* Quick Stats (optional enhancement) */}
+            <div className="bg-black/30 rounded-xl p-4 backdrop-blur-sm border border-white/10">
+              <h3 className="text-white font-bold text-sm mb-3 uppercase tracking-wider">Game Info</h3>
+              <div className="text-white/80 text-xs space-y-2">
+                <div className="flex justify-between">
+                  <span>Cards in deck:</span>
+                  <span className="font-bold text-white">{gameState.deck.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Your cards:</span>
+                  <span className="font-bold text-white">{humanPlayer?.hand.length || 0}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>CPU cards:</span>
+                  <span className="font-bold text-white">{aiPlayer?.hand.length || 0}</span>
+                </div>
               </div>
             </div>
           </div>
-        )}
-
-        {/* Player Hand (bottom) */}
-        <div>
-          <div className={clsx(
-            "text-center mb-3 font-semibold transition-all duration-300",
-            isPlayerTurn ? "text-yellow-300 text-lg" : "text-white"
-          )}>
-            Your Hand
-            {isPlayerTurn && <span className="ml-2">👈 Your turn!</span>}
-          </div>
-          <div className="flex justify-center">
-            {humanPlayer && (
-              <Hand
-                cards={humanPlayer.hand}
-                onCardClick={isPlayerTurn ? handlePlayCard : undefined}
-                isPlayerHand
-                playableCardIds={playableCards.map(c => c.id)}
-              />
-            )}
-          </div>
         </div>
-      </div>
-
-      {/* Restart Button */}
-      {gameState.phase === 'roundEnd' && (
-        <button
-          onClick={handleRestartRound}
-          className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors"
-        >
-          New Round
-        </button>
-      )}
-
-      {/* Instructions */}
-      <div className="mt-6 text-white text-center max-w-md">
-        <p className="text-sm opacity-80">
-          Match the rank of the top discard card. If you can't match, draw a card.
-          First to empty their hand wins!
-        </p>
       </div>
     </div>
   );
