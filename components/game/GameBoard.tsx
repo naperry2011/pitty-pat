@@ -41,9 +41,38 @@ export default function GameBoard() {
 
         {/* Game Title - Centered */}
         <div className="w-full text-center mb-6">
-          <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-2xl inline-block">
-            Pitty Pat
-          </h1>
+          <div className="inline-flex items-center gap-4">
+            {/* Left Casino Chips */}
+            <div className="hidden md:flex flex-col gap-0.5">
+              <div className="w-14 h-3 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full border-2 border-amber-700 shadow-md"></div>
+              <div className="w-14 h-3 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full border-2 border-amber-700 shadow-md -mt-1.5"></div>
+              <div className="w-14 h-3 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full border-2 border-amber-700 shadow-md -mt-1.5"></div>
+            </div>
+
+            {/* Title with Royal Border */}
+            <div className="relative px-8 py-4 border-4 border-amber-600 rounded-xl bg-gradient-to-b from-amber-900/40 to-amber-950/40 shadow-2xl animate-pulse-glow">
+              {/* Inner Border */}
+              <div className="absolute inset-0 border-2 border-amber-400/30 rounded-lg m-1 pointer-events-none"></div>
+
+              {/* Corner Accent Dots */}
+              <div className="absolute -top-2 -left-2 w-4 h-4 bg-amber-400 rounded-full shadow-lg border border-amber-600"></div>
+              <div className="absolute -top-2 -right-2 w-4 h-4 bg-amber-400 rounded-full shadow-lg border border-amber-600"></div>
+              <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-amber-400 rounded-full shadow-lg border border-amber-600"></div>
+              <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-amber-400 rounded-full shadow-lg border border-amber-600"></div>
+
+              {/* Title Text */}
+              <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-200 via-amber-400 to-amber-600 tracking-widest drop-shadow-lg relative text-glow-amber">
+                PITTY PAT
+              </h1>
+            </div>
+
+            {/* Right Casino Chips */}
+            <div className="hidden md:flex flex-col gap-0.5">
+              <div className="w-14 h-3 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full border-2 border-amber-700 shadow-md"></div>
+              <div className="w-14 h-3 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full border-2 border-amber-700 shadow-md -mt-1.5"></div>
+              <div className="w-14 h-3 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full border-2 border-amber-700 shadow-md -mt-1.5"></div>
+            </div>
+          </div>
         </div>
 
         {/* Game Status Message - Above everything */}

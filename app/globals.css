@@ -122,4 +122,34 @@
       rgb(6, 78, 59) 100%
     );
   }
+
+  /* Pulse glow animation for title */
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow:
+        0 0 20px rgba(251, 191, 36, 0.3),
+        0 0 40px rgba(251, 191, 36, 0.2),
+        inset 0 0 20px rgba(251, 191, 36, 0.1);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow:
+        0 0 30px rgba(251, 191, 36, 0.5),
+        0 0 60px rgba(251, 191, 36, 0.3),
+        inset 0 0 30px rgba(251, 191, 36, 0.15);
+      transform: scale(1.02);
+    }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2.5s ease-in-out infinite;
+  }
+
+  /* Text glow effect */
+  .text-glow-amber {
+    text-shadow:
+      0 0 20px rgba(251, 191, 36, 0.5),
+      0 0 40px rgba(251, 191, 36, 0.3),
+      0 0 60px rgba(251, 191, 36, 0.2);
+  }
 }
