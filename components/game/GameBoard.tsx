@@ -35,7 +35,7 @@ export default function GameBoard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-700 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-950 via-emerald-900 to-teal-900 felt-texture noise-overlay relative p-4">
       {/* Centered Container */}
       <div className="max-w-7xl mx-auto flex flex-col items-center">
 
@@ -65,16 +65,18 @@ export default function GameBoard() {
 
         {/* Score Display - Centered above main content */}
         <div className="flex gap-8 mb-6 justify-center">
-          <div className="bg-gradient-to-r from-emerald-700 to-emerald-600 px-6 py-3 rounded-xl shadow-lg border border-emerald-500/30">
-            <div className="text-center">
-              <div className="text-yellow-300 text-sm font-bold mb-1">YOU</div>
-              <div className="text-white text-3xl font-bold">{humanPlayer?.wins || 0}</div>
+          <div className="bg-gradient-to-r from-amber-800 to-amber-700 px-6 py-3 rounded-xl shadow-lg border border-amber-600/40 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-t from-transparent via-amber-400/10 to-transparent"></div>
+            <div className="text-center relative z-10">
+              <div className="text-amber-300 text-sm font-bold mb-1 tracking-wider">YOU</div>
+              <div className="text-white text-3xl font-bold drop-shadow-lg">{humanPlayer?.wins || 0}</div>
             </div>
           </div>
-          <div className="bg-gradient-to-r from-emerald-700 to-emerald-600 px-6 py-3 rounded-xl shadow-lg border border-emerald-500/30">
-            <div className="text-center">
-              <div className="text-blue-300 text-sm font-bold mb-1">CPU</div>
-              <div className="text-white text-3xl font-bold">{aiPlayer?.wins || 0}</div>
+          <div className="bg-gradient-to-r from-amber-800 to-amber-700 px-6 py-3 rounded-xl shadow-lg border border-amber-600/40 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-t from-transparent via-amber-400/10 to-transparent"></div>
+            <div className="text-center relative z-10">
+              <div className="text-cyan-300 text-sm font-bold mb-1 tracking-wider">CPU</div>
+              <div className="text-white text-3xl font-bold drop-shadow-lg">{aiPlayer?.wins || 0}</div>
             </div>
           </div>
         </div>
@@ -89,13 +91,13 @@ export default function GameBoard() {
           <div className="flex-1 flex flex-col items-center max-w-4xl mx-auto w-full">
 
             {/* Game Board */}
-            <div className="relative bg-gradient-to-br from-green-700 to-green-600 rounded-2xl p-6 md:p-8 shadow-2xl w-full border-2 border-green-800/50">
+            <div className="relative poker-table felt-grain rounded-2xl p-6 md:p-8 w-full overflow-hidden">
 
               {/* AI Hand (top) */}
               <div className="mb-8">
                 <div className={clsx(
                   "text-center mb-3 font-bold transition-all duration-300",
-                  currentPlayer?.isAI ? "text-yellow-300 text-lg scale-105" : "text-white/90"
+                  currentPlayer?.isAI ? "text-amber-400 text-lg scale-105" : "text-white/90"
                 )}>
                   Computer's Hand
                   {currentPlayer?.isAI && <span className="ml-2 animate-pulse">🤔</span>}
@@ -135,12 +137,12 @@ export default function GameBoard() {
               {/* Action Hints */}
               {isPlayerTurn && (
                 <div className="mb-6 flex justify-center">
-                  <div className="bg-gradient-to-r from-yellow-500 to-orange-500 px-6 py-2.5 rounded-full shadow-xl transform hover:scale-105 transition-transform">
-                    <div className="text-white text-sm font-bold flex items-center gap-2">
+                  <div className="bg-gradient-to-r from-amber-600 to-amber-500 px-6 py-2.5 rounded-full shadow-xl transform hover:scale-105 transition-transform border border-amber-400/30">
+                    <div className="text-white text-sm font-bold flex items-center gap-2 drop-shadow">
                       {canPlay && playableCards.length > 0 ? (
                         <>
                           <span className="text-lg animate-bounce">👇</span>
-                          <span>Play your <span className="text-yellow-100 font-black">{playableCards[0].rank}</span></span>
+                          <span>Play your <span className="text-amber-100 font-black">{playableCards[0].rank}</span></span>
                         </>
                       ) : canDraw ? (
                         <>
@@ -159,7 +161,7 @@ export default function GameBoard() {
               <div>
                 <div className={clsx(
                   "text-center mb-3 font-bold transition-all duration-300",
-                  isPlayerTurn ? "text-yellow-300 text-lg scale-105" : "text-white/90"
+                  isPlayerTurn ? "text-amber-400 text-lg scale-105" : "text-white/90"
                 )}>
                   Your Hand
                   {isPlayerTurn && <span className="ml-2">👈 Your turn!</span>}
